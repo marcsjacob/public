@@ -1,0 +1,56 @@
+Qualtrics.SurveyEngine.addOnload(function(){
+  //  Set number of choices;
+  var numChoice = 10;
+  
+  //  Vectors containing all attribute levels:
+    var genderArray  = ["Männlich", "Weiblich"];
+    var partyArray = ["SVP", "CVP", "FDP", "SVP"];
+    var experienceArray  = ["Keine", "4 Jahre"];
+    var educationArray   = ["Lehre (EFZ)", "Höhere Berufsbildung (Höhere Fachprüfung)", "Universität/ETH (Liz./Diplom/Master)", "Universität/ETH (Doktorat)"];
+    var occupationArray  = ["Verkäufer/-in im Detailhandel", "Ingenieur/-in", "Rechtsanwalt/Rechtsanwältin", "Geschäftsleitung eines internationalen Unternehmens"];
+    var salaryArray = ["CHF 5'000", "CHF 10'000", "CHF 30'000"];
+    var residenceArray = ["Seit 6 Jahren ", "Seit Geburt"];
+    
+    
+    //  Fisher-Yates shuffle:
+      function shuffle(array){
+        for (var i = array.length - 1; i > 0; i--){
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = array[i];
+          array[i] = array[j];
+          array[j] = temp;
+        }
+        return array;
+      }
+    
+    //  Shuffle a vector, choose the first entry:
+      function shuffle_one(theArray){
+        var out = shuffle(theArray);
+        var out = out[0];
+        return(out)
+      };
+    
+    var attribNames = [Wohnsitz im Kanton Zürich"];
+    
+    //  Randomize the display order			
+    var attribOrder = shuffle([1,2,3,4,5,6,7]);
+    
+    function randomize(i){	
+      //  Randomly draw the attributes for each candidate
+      var s1 = [shuffle_one(genderArray), shuffle_one(partyArray), shuffle_one(experienceArray), shuffle_one(educationArray), shuffle_one(occupationArray), shuffle_one(salaryArray), shuffle_one(residenceArray)]; 
+      var s2 = [shuffle_one(genderArray), shuffle_one(partyArray), shuffle_one(experienceArray), shuffle_one(educationArray), shuffle_one(occupationArray), shuffle_one(salaryArray), shuffle_one(residenceArray)];
+      
+      //  Save the results
+      for(var k = 1; k <= attribOrder.length; k++){
+        var index = attribOrder[k-1]-1;
+        Qualtrics.SurveyEngine.setEmbeddedData('study_a_1_c'+i+'_attrib'+k+'_name', attribNames[index]);
+        Qualtrics.SurveyEngine.setEmbeddedData('study_a_1_c'+i+'_attrib'+k+'_cand1', s1[index]);
+        Qualtrics.SurveyEngine.setEmbeddedData('study_a_1_c'+i+'_attrib'+k+'_cand2', s2[index]);
+      };
+    };
+    
+    for(var i=1; i <= numChoice; i++){
+      randomize(i);
+    };
+    
+});
